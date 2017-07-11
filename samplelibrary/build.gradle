@@ -1,0 +1,89 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'maven'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultPublishConfig 'release'
+    publishNonDefault true
+
+
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+        }
+    }
+    sourceSets{
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+    compileOptions{
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: getReleaseRepositoryUrl()) {
+                Boolean uploadLocal = project.hasProperty("UPLOAD_LOCAL")? new Boolean(UPLOAD_LOCAL) : false
+
+                if(!uploadLocal) {
+                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+                }
+            }
+            snapshotRepository(url: getSnapshotRepositoryUrl()) {
+                Boolean uploadLocal = project.hasProperty("UPLOAD_LOCAL")? new Boolean(UPLOAD_LOCAL) : false
+                if(!uploadLocal){
+                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+                }
+            }
+
+            pom.project {
+                name 'Afersale Auth'
+                packaging 'aar'
+                description 'Auth module for aftersale'
+                url 'https://github.com/despegar/android-app-aftersale-auth'
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'despegar'
+                        name 'despegar'
+                        email 'android-aftersale-dev@despegar.com'
+                    }
+                }
+            }
+        }
+    }
+}
+
+uploadArchives.dependsOn uploadArchivesToNexus
