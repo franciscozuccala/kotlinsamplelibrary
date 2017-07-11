@@ -19,8 +19,18 @@ allprojects {
     repositories {
         jcenter()
     }
+
+    task clean(type: Delete) {
+        delete rootProject.buildDir
+    }
+
+    task uploadArchivesToNexus << {
+        if(!isRelease()){
+            version += "-SNAPSHOT"
+        }
+    }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+def isRelease(){
+    return project.hasProperty("IS_RELEASE") ? new Boolean(IS_RELEASE) : false
 }

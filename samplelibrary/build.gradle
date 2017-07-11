@@ -49,36 +49,21 @@ dependencies {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: getReleaseRepositoryUrl()) {
+            repository(url: 'file://' + new File(System.getProperty('user.home'),'.m2/repository').absolutePath) {
                 Boolean uploadLocal = project.hasProperty("UPLOAD_LOCAL")? new Boolean(UPLOAD_LOCAL) : false
-
-                if(!uploadLocal) {
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-                }
             }
-            snapshotRepository(url: getSnapshotRepositoryUrl()) {
+            snapshotRepository(url: 'file://' + new File(System.getProperty('user.home'),'.m2/repository').absolutePath) {
                 Boolean uploadLocal = project.hasProperty("UPLOAD_LOCAL")? new Boolean(UPLOAD_LOCAL) : false
-                if(!uploadLocal){
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
-                }
             }
 
             pom.project {
-                name 'Afersale Auth'
+                name 'Kotlin library'
                 packaging 'aar'
                 description 'Auth module for aftersale'
-                url 'https://github.com/despegar/android-app-aftersale-auth'
                 licenses {
                     license {
                         name 'The Apache Software License, Version 2.0'
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'despegar'
-                        name 'despegar'
-                        email 'android-aftersale-dev@despegar.com'
                     }
                 }
             }
